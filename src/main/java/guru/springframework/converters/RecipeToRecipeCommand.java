@@ -10,14 +10,15 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
+public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand>{
 
-    private final CategoryToCategoryCommand categoryConverter;
+    private final CategoryToCategoryCommand categoryConveter;
     private final IngredientToIngredientCommand ingredientConverter;
     private final NotesToNotesCommand notesConverter;
 
-    public RecipeToRecipeCommand(CategoryToCategoryCommand categoryConverter, IngredientToIngredientCommand ingredientConverter, NotesToNotesCommand notesConverter) {
-        this.categoryConverter = categoryConverter;
+    public RecipeToRecipeCommand(CategoryToCategoryCommand categoryConveter, IngredientToIngredientCommand ingredientConverter,
+                                 NotesToNotesCommand notesConverter) {
+        this.categoryConveter = categoryConveter;
         this.ingredientConverter = ingredientConverter;
         this.notesConverter = notesConverter;
     }
@@ -40,16 +41,18 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
         command.setServings(source.getServings());
         command.setSource(source.getSource());
         command.setUrl(source.getUrl());
+        command.setNotes(notesConverter.convert(source.getNotes()));
 
-        if (source.getCategories() != null && source.getCategories().size() > 0) {
+        if (source.getCategories() != null && source.getCategories().size() > 0){
             source.getCategories()
-                    .forEach((Category category) -> command.getCategories().add(categoryConverter.convert(category)));
+                    .forEach((Category category) -> command.getCategories().add(categoryConveter.convert(category)));
         }
 
-        if (source.getIngredients() != null && source.getIngredients().size() > 0) {
+        if (source.getIngredients() != null && source.getIngredients().size() > 0){
             source.getIngredients()
                     .forEach(ingredient -> command.getIngredients().add(ingredientConverter.convert(ingredient)));
         }
+
         return command;
     }
 }
