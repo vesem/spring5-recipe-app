@@ -68,8 +68,10 @@ public class ImageControllerTest {
         verify(imageService, times(1)).saveImageFile(anyLong(), any());
     }
 
+
     @Test
     public void renderImageFromDB() throws Exception {
+
         //given
         RecipeCommand command = new RecipeCommand();
         command.setId(1L);
